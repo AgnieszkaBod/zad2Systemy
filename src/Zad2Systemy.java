@@ -6,17 +6,16 @@ import java.io.IOException;
 
 public class Zad2Systemy extends JFrame {
     public Zad2Systemy() {
-        setSize(800, 700);
+        setSize(1500, 500);
         setTitle("Zad2Systemy");
     }
 
-    void readFile() throws IOException {
-
+    public static void main(String[] args) throws IOException {
         final String filePath = "src/katalog.txt";
         BufferedReader fileReader = null;
         String line;
-        String[] headers = new String[15];
-        Object[][] data = new Object[24][15];
+        final String[] headers = new String[15];
+        final Object[][] data = new Object[24][15];
 
         try {
             fileReader = new BufferedReader(new FileReader(filePath));
@@ -41,11 +40,19 @@ public class Zad2Systemy extends JFrame {
                 System.arraycopy(words, 0, data[i], 0, words.length);
             }
         }
-    }
-
-
-    public static void main(String[] args) throws IOException {
-        Zad2Systemy zad2 = new Zad2Systemy();
-        zad2.readFile();
+        Zad2Systemy window = new Zad2Systemy();
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JTable table = new JTable(data, headers) {
+            @Override  //edycja danych w cell
+            public void setValueAt(Object aValue, int row, int column) {
+                super.setValueAt(aValue, row, column);
+                data[row][column] = aValue;
+                System.out.println(aValue + " | " + row + " | " + column);
+            }
+        };
+        table.setBounds(30, 40, 400, 500);
+        JScrollPane sp = new JScrollPane(table);
+        window.add(sp);
+        window.setVisible(true);
     }
 }
