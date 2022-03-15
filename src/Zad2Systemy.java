@@ -1,16 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class Zad2Systemy extends JFrame {
 
     public Zad2Systemy() {
-        setSize(1500, 500);
+        setSize(1500, 700);
         setTitle("Zad2Systemy");
     }
 
@@ -19,11 +14,9 @@ public class Zad2Systemy extends JFrame {
     public static String[] headers = new String[15];
     public static Object[][] data = new Object[24][15];
 
-    public static JButton bExport = new JButton("Eksportuj dane");
-
     public static void importData() throws IOException {
         BufferedReader fileReader = null;
-        String line = null;
+        String line;
         try {
             fileReader = new BufferedReader(new FileReader(filePath));
 
@@ -33,7 +26,8 @@ public class Zad2Systemy extends JFrame {
 
         }
         String[] words;
-        line = fileReader.readLine();
+        assert fileReader != null;
+        fileReader.readLine();
 
         for (int i = 0; i < 24; i++) {
             line = fileReader.readLine();
@@ -70,14 +64,44 @@ public class Zad2Systemy extends JFrame {
         }
     }
 
+    public static void exportToFile() {
+        PrintWriter zapis = null;
+        try {
+            zapis = new PrintWriter("src/wynik.txt");
+        } catch (FileNotFoundException fileNotFoundException) {
+            fileNotFoundException.printStackTrace();
+        }
+
+        for (int i = 0; i < 24; i++) {
+            for (int j = 0; j < 15; j++) {
+                assert zapis != null;
+                zapis.print(data[i][j] + ";");
+            }
+            if (i < 23) {
+                zapis.print("\n");
+            }
+        }
+        zapis.close();
+    }
+
     public static void main(String[] args) throws IOException {
 
         Zad2Systemy window = new Zad2Systemy();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getHeaders();
 
+        JButton bExport = new JButton("Eksportuj dane");
+        bExport.setBounds(10, 450, 150, 50);
+        bExport.setBackground(Color.ORANGE);
+        bExport.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+        JButton bImport = new JButton("Importuj dane");
+        bImport.setBounds(170, 450, 150, 50);
+        bImport.setBackground(Color.BLUE);
+        bImport.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
         JTable table = new JTable(data, headers) {
-            @Override  //edycja danych w cell
+            @Override
             public void setValueAt(Object aValue, int row, int column) {
                 super.setValueAt(aValue, row, column);
                 data[row][column] = aValue;
@@ -85,32 +109,21 @@ public class Zad2Systemy extends JFrame {
             }
         };
 
-       JButton bImport = new JButton("Importuj dane");
-
-        bExport.setBounds(10, 450, 150, 50);
-        bExport.setBackground(Color.ORANGE);
-        bExport.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-        bImport.setBounds(170, 450, 150, 50);
-        bImport.setBackground(Color.BLUE);
-        bImport.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
         table.setBounds(30, 40, 400, 500);
         JScrollPane sp = new JScrollPane(table);
-        window.add(sp);
+        window.add(bExport);
         window.add(bImport);
+        window.add(sp);
         window.setVisible(true);
 
-        bImport.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    importData();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                window.repaint();
+        bImport.addActionListener(e -> {
+            try {
+                importData();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
+            window.repaint();
         });
+        bExport.addActionListener(e -> exportToFile());
     }
 }
