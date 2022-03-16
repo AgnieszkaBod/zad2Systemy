@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class Zad2Systemy extends JFrame {
 
@@ -21,8 +22,8 @@ public class Zad2Systemy extends JFrame {
         BufferedReader fileReader = null;
         String line;
         try {
-            fileReader = new BufferedReader(new FileReader(filePath));
-
+            fileReader = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(filePath), StandardCharsets.UTF_8));
         } catch (
                 FileNotFoundException e) {
             System.out.println("Blad przy otwieraniu pliku!");
@@ -49,7 +50,8 @@ public class Zad2Systemy extends JFrame {
         String line;
 
         try {
-            fileReader = new BufferedReader(new FileReader(filePath));
+            fileReader = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(filePath), StandardCharsets.UTF_8));
 
         } catch (
                 FileNotFoundException e) {
@@ -70,8 +72,8 @@ public class Zad2Systemy extends JFrame {
     public static void exportToFile() {
         PrintWriter zapis = null;
         try {
-            zapis = new PrintWriter("src/wynik.txt");
-        } catch (FileNotFoundException fileNotFoundException) {
+            zapis = new PrintWriter("src/wynik.txt", StandardCharsets.UTF_8);
+        } catch (IOException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
         }
 

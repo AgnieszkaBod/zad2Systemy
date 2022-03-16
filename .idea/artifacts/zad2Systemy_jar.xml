@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="zad2Systemy:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/zad2Systemy_jar</output-path>
+    <root id="archive" name="zad2Systemy.jar">
+      <element id="module-output" name="zad2Systemy" />
+    </root>
+  </artifact>
+</component>
