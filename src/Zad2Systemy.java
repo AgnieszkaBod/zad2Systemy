@@ -14,6 +14,9 @@ public class Zad2Systemy extends JFrame {
     public static String[] headers = new String[15];
     public static Object[][] data = new Object[24][15];
 
+    public static JButton bImport = new JButton("Importuj dane");
+    public static JButton bExport = new JButton("Eksportuj dane");
+
     public static void importData() throws IOException {
         BufferedReader fileReader = null;
         String line;
@@ -90,12 +93,10 @@ public class Zad2Systemy extends JFrame {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getHeaders();
 
-        JButton bExport = new JButton("Eksportuj dane");
         bExport.setBounds(10, 450, 150, 50);
         bExport.setBackground(Color.ORANGE);
         bExport.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        JButton bImport = new JButton("Importuj dane");
         bImport.setBounds(170, 450, 150, 50);
         bImport.setBackground(Color.BLUE);
         bImport.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -104,7 +105,22 @@ public class Zad2Systemy extends JFrame {
             @Override
             public void setValueAt(Object aValue, int row, int column) {
                 super.setValueAt(aValue, row, column);
-                data[row][column] = aValue;
+                if (aValue.toString().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(window
+                            , "Pole nie może być puste!");
+                } else if ((column == 4 || column == 10) && aValue.toString().trim().length() != 3) {
+                    JOptionPane.showMessageDialog(window
+                            , "Tekst musi miec 3 znaki!");
+                } else if (column == 1 && !aValue.toString().endsWith("\"")) {
+                    JOptionPane.showMessageDialog(window
+                            , "Pole musi się kończyć na \"");
+                } else if (column == 2 & !aValue.toString().matches("[0-9]+x[0-9]+")) {
+                    JOptionPane.showMessageDialog(window
+                            , "Wprowadź wartość według wzoru, np. 1920x1080");
+                } else {
+                    super.setValueAt(aValue, row, column);
+                    data[row][column] = aValue;
+                }
                 System.out.println(aValue + " | " + row + " | " + column);
             }
         };
